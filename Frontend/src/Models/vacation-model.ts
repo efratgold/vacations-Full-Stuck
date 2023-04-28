@@ -1,4 +1,4 @@
-import { UploadedFile } from "express-fileupload";
+// import { UploadedFile } from "express-fileupload";
 import Joi from "joi";
 import { ValidationError } from "./client-errors";
 
@@ -11,20 +11,9 @@ class VacationModel {
     public endDate: string;
     public price: number;
     public imageUrl: string;
-    public image: UploadedFile;
+    // public image: UploadedFile;
 
 
-    public constructor (vacation: VacationModel) {
-
-        this.vacationId = vacation.vacationId;
-        this.destination = vacation.destination;
-        this.description = vacation.description;
-        this.startDate = vacation.startDate;
-        this.endDate = vacation.endDate;
-        this.price = vacation.price;
-        this.imageUrl = vacation.imageUrl;
-        this.image = vacation.image;
-    }
 
     private static validationSchema = Joi.object({
         vacationId: Joi.number().positive().optional().integer(),

@@ -11,16 +11,7 @@ class UserModel {
     public password: string;
     public roleId: RoleModel;
 
-    public constructor (user: UserModel) {
 
-        this.userId = user.userId;
-        this.firstName = user.firstName;
-        this.lastName = user.lastName;
-        this.email = user.email;
-        this.password = user.password;
-        this.roleId = user.roleId;
-
-    }
     private static validationSchema = Joi.object({
         userId: Joi.number().positive().optional().integer(),
         firstName: Joi.string().required(),

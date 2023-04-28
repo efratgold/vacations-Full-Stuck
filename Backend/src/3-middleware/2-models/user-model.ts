@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { ValidationError } from "./client-errors";
-import RoleModel from "./role-model";
+import { ValidationError } from "../../2-models/client-errors";
+import RoleModel from "../../2-models/role-model";
 
 class UserModel {
 

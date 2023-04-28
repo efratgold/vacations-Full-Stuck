@@ -1,11 +1,16 @@
 import express, { Request, Response, NextFunction } from "express";
 import VacationModel from "../2-models/vacation-model";
+import verifyAdmin from "../3-middleware/verify-admin";
+import verifyLoggedIn from "../3-middleware/verify-logged-in";
+// import VacationModel from "../3-middleware/2-models/vacation-model";
+// import verifyAdmin from "../3-middleware/2-models/verify-admin";
+// import verifyLoggedIn from "../3-middleware/2-models/verify-logged-in";
 import imageHandling from "../4-utils/image-handling";
 import vacationsService from "../5-services/vacations-service";
 
 const router = express.Router();
 
-router.get("/vacations", async (request: Request, response: Response, next: NextFunction) => {
+router.get("/vacations",verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const vacations = await vacationsService.getAllVacations();
         response.json(vacations)
@@ -15,7 +20,7 @@ router.get("/vacations", async (request: Request, response: Response, next: Next
     }
 });
 
-router.post("/newVacation", async (request: Request, response: Response, next: NextFunction) => {
+router.post("/newVacation",verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         request.body.image = request.files?.image;
         const vacation = new VacationModel(request.body);
@@ -27,7 +32,7 @@ router.post("/newVacation", async (request: Request, response: Response, next: N
     }
 });
 
-router.put("/vacations/:id([0-9]+)", async (request: Request, response: Response, next: NextFunction) => {
+router.put("/vacations/:id([0-9]+)",verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         request.body.vacationId = +request.params.id;
 
@@ -43,7 +48,7 @@ router.put("/vacations/:id([0-9]+)", async (request: Request, response: Response
     }
 });
 
-router.delete("/vacations/:id([0-9]+)", async (request: Request, response: Response, next: NextFunction) => {
+router.delete("/vacations/:id([0-9]+)",verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const id =+request.params.id;
         await vacationsService.deleteVacation(id);

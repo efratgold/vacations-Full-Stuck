@@ -1,9 +1,9 @@
 import dal from "../4-utils/dal";
 import { OkPacket } from "mysql";
-import VacationModel from "../2-models/vacation-model";
-import { ResourceNotFoundError } from "../2-models/client-errors";
 import appConfig from "../4-utils/app-config";
 import imageHandling from "../4-utils/image-handling";
+import VacationModel from "../2-models/vacation-model";
+import { ResourceNotFoundError } from "../2-models/client-errors";
 
 async function getAllVacations():Promise<VacationModel[]> {
 
@@ -24,6 +24,8 @@ async function getAllVacations():Promise<VacationModel[]> {
 
 async function addVacation(vacation:VacationModel):Promise<VacationModel>{
 
+    vacation.validate();
+
     let imageName = null;
     if(vacation.image) {
         imageName = await imageHandling.saveImage(vacation.image);
@@ -39,6 +41,9 @@ async function addVacation(vacation:VacationModel):Promise<VacationModel>{
 }
 
 async function updateVacation(vacation: VacationModel): Promise<VacationModel> {
+    //validation joi
+    vacation.validate();
+
     let imageName = await getVacationImageName(vacation.vacationId);
     if(vacation.image) {
       

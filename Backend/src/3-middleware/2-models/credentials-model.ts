@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { ValidationError } from "./client-errors";
+import { ValidationError } from "../../2-models/client-errors";
 
 class CredentialsModel {
 

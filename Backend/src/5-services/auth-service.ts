@@ -1,5 +1,6 @@
 import { OkPacket } from "mysql";
-import { ValidationError } from "../2-models/client-errors";
+import { UnauthorizedError, ValidationError } from "../2-models/client-errors";
+import CredentialsModel from "../2-models/credentials-model";
 import RoleModel from "../2-models/role-model";
 import UserModel from "../2-models/user-model";
 import cyber from "../4-utils/cyber";
@@ -11,6 +12,7 @@ import dal from "../4-utils/dal";
 async function register(user: UserModel): Promise<string>{
 
     //1.TODO  joi validation ....
+    user.validate();
 
     //2.check if email that user enter is empty : and send him message if email not empty
     const isTaken = await isEmailTaken(user.email);
@@ -50,7 +52,34 @@ async function isEmailTaken(email: string): Promise<boolean>{
     return isTaken === 1;
 
 }
+//Login:
+async function login(credentials: CredentialsModel): Promise<string> {
+    //1.TODO  joi validation ....
+    credentials.validate();
+
+
+ const sql = `SELECT * FROM users WHERE 
+ email = ? AND
+ password = ?`;
+
+ //execute:
+ const users = await dal.execute(sql, [credentials.email, credentials.password]);
+
+ //extract user:
+ const user = users[0];
+
+ //if user not exist
+ if(!user) throw new UnauthorizedError("Incorrect username or password");
+
+   ///create token to user and return token.
+   const token = cyber.createToken(user);
+ 
+   //return token:
+   return token;
+
+}
 
 export default {
-    register
+    register,
+    login
 }
